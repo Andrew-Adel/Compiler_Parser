@@ -39,6 +39,8 @@ class MainWindow : public QMainWindow
 
 
 public:
+    QString inputText;
+    QList <QGraphicsItem*> itemList;
     std::queue<Token> scannerTokens;
     class Token {
     public:
@@ -51,6 +53,7 @@ public:
 
 
     void processAndDrawSyntaxtree();
+    void ClearAll();
 
     ~MainWindow();
 

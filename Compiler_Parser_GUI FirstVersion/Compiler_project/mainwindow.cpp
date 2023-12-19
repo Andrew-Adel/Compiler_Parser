@@ -387,6 +387,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onParseButtonClicked);
     connect(ui->scannerBtn, &QPushButton::clicked, this, &MainWindow::on_scannerBtn_clicked);
+    connect(ui->ClearBtn, &QPushButton::clicked, this, &MainWindow::ClearAll);
 }
 
 void MainWindow::onParseButtonClicked() {
@@ -402,6 +403,45 @@ void MainWindow::onParseButtonClicked() {
 void MainWindow :: paintEvent(QPaintEvent *event){
 
 }
+
+
+
+void MainWindow:: ClearAll(){
+
+
+    ui->textEdit->clear();
+
+    ui->scannerTxt->clear();
+
+    edges.clear();
+    nodes.clear();
+
+    ui->textEdit->setFocus();
+        ui->graphicsView->clearMask();
+
+
+        if (itemList.isEmpty()) {
+        qDebug() << "Scene is empty";
+        QMessageBox::information(nullptr, "Done", "ALL tabs are cleared");
+        return;
+        }
+
+        while (!itemList.isEmpty()) {
+        QGraphicsItem *item = itemList.takeFirst();
+
+        if (item != nullptr) {
+            delete item;
+        } else {
+            // Handle the case where the item pointer is unexpectedly null
+            QMessageBox::critical(nullptr, "Error", "Null item found in scene");
+        }
+        }
+
+        view->viewport()->update();
+
+
+}
+
 
 void MainWindow::processAndDrawSyntaxtree() {
     // Check if the user stopped typing and the "Parse" button has been clicked.
@@ -438,7 +478,7 @@ void MainWindow::processAndDrawSyntaxtree() {
 
          //     create your view and scene
          view = new QGraphicsView(this);
-         setCentralWidget(view);
+        // setCentralWidget(view);
          scene = new QGraphicsScene(this);
          view->setScene(scene);
          // view->setRenderHint(QPainter::Antialiasing); // Optional: Enable antialiasing for smoother rendering
