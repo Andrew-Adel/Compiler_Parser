@@ -413,33 +413,27 @@ void MainWindow:: ClearAll(){
 
     ui->scannerTxt->clear();
 
-    edges.clear();
-    nodes.clear();
+   // edges.clear();
+    //nodes.clear();
 
     ui->textEdit->setFocus();
         ui->graphicsView->clearMask();
 
-
+    itemList = scene->items();
         if (itemList.isEmpty()) {
         qDebug() << "Scene is empty";
         QMessageBox::information(nullptr, "Done", "ALL tabs are cleared");
         return;
         }
 
-        while (!itemList.isEmpty()) {
-        QGraphicsItem *item = itemList.takeFirst();
-
-        if (item != nullptr) {
-            delete item;
-        } else {
-            // Handle the case where the item pointer is unexpectedly null
-            QMessageBox::critical(nullptr, "Error", "Null item found in scene");
-        }
+      itemList = scene->items();
+        while(!itemList.isEmpty()){
+        delete itemList.first();
+        itemList = scene->items();
         }
 
-        view->viewport()->update();
 
-
+view->viewport()->update();
 }
 
 
