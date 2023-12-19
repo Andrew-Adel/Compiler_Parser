@@ -92,7 +92,9 @@ public:
 
     void printTree(int curY=100, int depth = 0) {
         cout<<initialX<<" "<<curY<<" "<<initialX+xOffset<<" "<<curY+yOffset<<endl;
-        nodes.push_back(FarouqianNode(getType(token.type), getValue(token.type), (!id_op_label.value.empty()? id_op_label.value: token.value), initialX, curY, Xlength, Ylength, depth));
+        string t=(!id_op_label.value.empty()? id_op_label.value: token.value);
+        if(!t.empty()) t="("+t+")";
+        nodes.push_back(FarouqianNode(getType(token.type), getValue(token.type), t, initialX, curY, Xlength, Ylength, depth));
         if(!firstTime) edges.push_back(FarouqianEdge(parentsPoints.top().first+Xlength/2, parentsPoints.top().second+Ylength/2, initialX+Xlength/2, curY+Ylength/2));
 
         parentsPoints.push({initialX, curY});
@@ -127,10 +129,12 @@ private:
     vector<Node*> children;
 
 };
-
+scanner scan;
 class Parser
 {
 public:
+    Parser(){}
+
     Parser(queue<Token> tokensQ){
         //		vector<Node*> tokensV;
         while (!tokensQ.empty())
@@ -142,6 +146,18 @@ public:
         currentTokenIndex = 0;
     }
     Parser(vector<Token>& tokens) : tokens(tokens), currentTokenIndex(0) {}
+
+    void getTokens(queue<Token>tokensQ){
+        //		vector<Node*> tokensV;
+        tokens.clear();
+        while (!tokensQ.empty())
+        {
+            tokens.push_back(tokensQ.front());
+            tokensQ.pop();
+        }
+        //		tokens = tokensV;
+        currentTokenIndex = 0;
+    }
 
     Node* parse() {
         return program();
@@ -361,7 +377,8 @@ public:
     }
 
 };
-scanner scan;
+Parser p;
+Node* tree;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -369,11 +386,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onParseButtonClicked);
+    connect(ui->scannerBtn, &QPushButton::clicked, this, &MainWindow::on_scannerBtn_clicked);
 }
 
 void MainWindow::onParseButtonClicked() {
     // Set the flag to indicate the "Parse" button has been clicked.
-    if(true){
+    if(ScannerBtnClicked){
         // Call the text processing slot immediately after the button is clicked.
         parseButtonClicked = true;
         processAndDrawSyntaxtree();
@@ -393,7 +411,6 @@ void MainWindow::processAndDrawSyntaxtree() {
 
     // now the inputSTR contain the user input from gui as a string
      scannerTokens = scan.get_tokens(inputStr);
-
     // now the scannerTokens contain the output of the scanner which is a queue of tokens
 
     //todo : create the parse tree then draw it
@@ -402,14 +419,14 @@ void MainWindow::processAndDrawSyntaxtree() {
 
          initialX = 100, initialY = 100, firstTime=true;
          // Call your function
-         Parser p = Parser(scannerTokens);
+         // Parser p = Parser(scannerTokens);           done down in the scannerOnClickFunc
          //	p.parse();
 
          nodes.clear();
          edges.clear();
 
          nodes.push_back(FarouqianNode(getType(dummy), getValue(dummy), dummy, initialX, initialY-100, 1, 1, 0));
-         Node* tree = p.parse();
+         // Node* tree = p.parse();                 down in the onClick scan butn
          cout << "print Tree\n";
          //	n.printTree();
          //	p.printVector();
@@ -430,10 +447,18 @@ void MainWindow::processAndDrawSyntaxtree() {
          ui->graphicsView->setScene(scene);
 
          for(auto edge: edges){
+             /*
+             // this code only prints on the whole screen not the QGraphicsView as I want
+             QLineF l(edge.x, edge.y, edge.px,edge.py);
+             QPainter painter(this);
+             painter.setPen(NextToMe);
+             painter.drawLine(l);
+             */
+
 
              QGraphicsLineItem* line = new QGraphicsLineItem(QLineF(edge.x, edge.y, edge.px,edge.py));
              scene->addItem(line);
-
+            //                     هنحتاج نعمل حاجة زي كده لو عايزين نفرق بين لون الneighbours and children
              // if(edge.isFriend)
              //     parsetree->addEdgeFriend(edge.x1, edge.y1, edge.x2, edge.y2);
              // else if(!edge.isFriend)
@@ -479,6 +504,7 @@ void MainWindow::processAndDrawSyntaxtree() {
 
      } catch (const exception& e) {
          // Handle the exception gracefully
+         QMessageBox::critical(0, "error", e.what());
          cerr << "Error: " << e.what() << endl;
      }
 
@@ -534,9 +560,40 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_ScannerBtn_clicked()
+void MainWindow::on_scannerBtn_clicked()
 {
-    // ScannerBtnClicked=true;
-    // QMessageBox::information(0, "error", "Scanned Successfuly!");
+    cerr<<"I'm here2"<<endl;
+    try {
+        QString inputText = ui->textEdit->toPlainText();
+        string inputStr = inputText.toStdString();
+
+        // now the inputSTR contain the user input from gui as a string
+        scannerTokens = scan.get_tokens(inputStr);
+
+        p.getTokens(scannerTokens);
+
+        tree = p.parse();
+
+        // now the scannerTokens contain the output of the scanner which is a queue of tokens
+
+        ScannerBtnClicked=true;
+        string scannerResultStr="";
+        auto tempTokens=scan.get_tokens(inputStr);
+        while(!tempTokens.empty()){
+            string temp=tempTokens.front().value+","+tempTokens.front().type+"\n";
+            scannerResultStr+=temp;
+            tempTokens.pop();
+        }
+        ui->scannerTxt->setText(QString::fromStdString(scannerResultStr));
+
+        QMessageBox::information(0, "Succeeded", "Scanned Successfuly!");
+
+    } catch (const exception& e) {
+        // Handle the exception gracefully
+        ScannerBtnClicked=false;
+        ui->scannerTxt->clear();
+        ui->textEdit->setFocus();
+        QMessageBox::critical(0, "Error", e.what());
+    }
 }
 

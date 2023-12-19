@@ -24,7 +24,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="FileUpload">
        <attribute name="title">
@@ -42,13 +42,7 @@
          <widget class="QTextEdit" name="textEdit"/>
         </item>
         <item row="2" column="0">
-         <widget class="QPushButton" name="ScannerBtn">
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
+         <widget class="QPushButton" name="scannerBtn">
           <property name="text">
            <string>scan</string>
           </property>

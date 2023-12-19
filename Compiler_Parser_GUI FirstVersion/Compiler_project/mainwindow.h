@@ -66,7 +66,7 @@ public slots:
 
 
 private slots:
-    void on_ScannerBtn_clicked();
+    void on_scannerBtn_clicked();
 
 private:
     QGraphicsView *view;
