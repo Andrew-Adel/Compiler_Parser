@@ -7,6 +7,7 @@
 #include <queue>
 #include <stack>
 //#include "Parsing.h"
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QPainter>
 #include <string>
@@ -19,6 +20,8 @@
 using namespace std;
 
 QPen NextToMe(Qt::green), belowMe(Qt::red), RectanglePen(Qt::black), EllipsePen(Qt::blue);
+QFont heading1Font("Arial", 24, QFont::Bold), buttonFont("Times New Roman", 12, QFont::Bold);
+
 int initialX, initialY, xOffset=20, yOffset=5;
 bool firstTime=true;
 const int Xlength=75, Ylength=50;
@@ -385,8 +388,21 @@ MainWindow::MainWindow(QWidget *parent)
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    ui->label->setFont(heading1Font);
+    ui->label_2->setFont(heading1Font);
+    ui->label_3->setFont(heading1Font);
+    ui->tabWidget->setStyleSheet("QTabBar::tab:first { min-width: 200px; }QTabBar::tab:second { min-width: 200px; }QTabBar::tab:third { min-width: 200px; }");
+    ui->clearBtn->setFont(buttonFont);
+    ui->scannerBtn->setFont(buttonFont);
+    ui->pushButton->setFont(buttonFont);
+    ui->uploadFile->setFont(buttonFont);
+
+
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onParseButtonClicked);
     connect(ui->scannerBtn, &QPushButton::clicked, this, &MainWindow::on_scannerBtn_clicked);
+    connect(ui->clearBtn, &QPushButton::clicked, this, &MainWindow::clearAll);
+    connect(ui->uploadFile, &QPushButton::clicked, this, &MainWindow::openFile);
 }
 
 void MainWindow::onParseButtonClicked() {
@@ -401,6 +417,29 @@ void MainWindow::onParseButtonClicked() {
 
 void MainWindow :: paintEvent(QPaintEvent *event){
 
+}
+
+
+
+void MainWindow::clearAll(){
+    ui->textEdit->clear();
+    ui->scannerTxt->clear();
+
+    edges.clear();
+    nodes.clear();
+
+    ui->textEdit->setFocus();
+    ui->graphicsView->clearMask();
+
+    if(scene->items().isEmpty()){
+        qDebug() << "Scene is empty";
+        QMessageBox::information(nullptr, "Done", "ALL tabs are cleared");
+        return;
+    }
+
+    scene->clear();
+
+    view->viewport()->update();
 }
 
 void MainWindow::processAndDrawSyntaxtree() {
@@ -425,7 +464,7 @@ void MainWindow::processAndDrawSyntaxtree() {
          nodes.clear();
          edges.clear();
 
-         nodes.push_back(FarouqianNode(getType(dummy), getValue(dummy), dummy, initialX, initialY-100, 1, 1, 0));
+         //nodes.push_back(FarouqianNode(getType(dummy), getValue(dummy), dummy, initialX-50, initialY-50, 1, 1, 0));
          // Node* tree = p.parse();                 down in the onClick scan butn
          cout << "print Tree\n";
          //	n.printTree();
@@ -438,10 +477,10 @@ void MainWindow::processAndDrawSyntaxtree() {
 
          //     create your view and scene
          view = new QGraphicsView(this);
-         setCentralWidget(view);
+         // setCentralWidget(view);
          scene = new QGraphicsScene(this);
          view->setScene(scene);
-         // view->setRenderHint(QPainter::Antialiasing); // Optional: Enable antialiasing for smoother rendering
+         // // view->setRenderHint(QPainter::Antialiasing); // Optional: Enable antialiasing for smoother rendering
          view->setAlignment(Qt::AlignLeft | Qt::AlignTop); // Align the scene to the top-left corner
 
          ui->graphicsView->setScene(scene);
@@ -595,5 +634,24 @@ void MainWindow::on_scannerBtn_clicked()
         ui->textEdit->setFocus();
         QMessageBox::critical(0, "Error", e.what());
     }
+}
+
+void MainWindow::openFile(){
+
+    QString filePath = QFileDialog::getOpenFileName(
+        this, tr("Open File"), "C://",
+        "All Files (*.*);;Text Files (*.txt)");
+
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::ReadOnly)){
+        QMessageBox::information(0, "info", file.errorString());
+    }
+
+    ui->textEdit->clear();
+
+    QTextStream in(&file);
+
+    ui->textEdit->setText(in.readAll());
 }
 

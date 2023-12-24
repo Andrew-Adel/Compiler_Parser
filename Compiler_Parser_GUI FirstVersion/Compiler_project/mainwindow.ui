@@ -6,19 +6,35 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>952</width>
-    <height>630</height>
+    <width>721</width>
+    <height>541</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0" colspan="2">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QPushButton" name="clearBtn">
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Clear</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -26,25 +42,86 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="FileUpload">
+      <widget class="QWidget" name="Editor">
        <attribute name="title">
         <string>Editor</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Enter your code</string>
-          </property>
-         </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>15</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Enter you code</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="uploadFile">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>11</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Upload File</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
-        <item row="1" column="0">
+        <item>
          <widget class="QTextEdit" name="textEdit"/>
         </item>
-        <item row="2" column="0">
+        <item>
          <widget class="QPushButton" name="scannerBtn">
+          <property name="sizeIncrement">
+           <size>
+            <width>10</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>scan</string>
+           <string>Scan</string>
           </property>
          </widget>
         </item>
@@ -57,6 +134,13 @@
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <widget class="QLabel" name="label_3">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+            <pointsize>15</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Scanner Output</string>
           </property>
@@ -71,8 +155,14 @@
         </item>
         <item row="2" column="0">
          <widget class="QPushButton" name="pushButton">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>parse</string>
+           <string>Parse</string>
           </property>
          </widget>
         </item>
@@ -85,6 +175,13 @@
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
          <widget class="QLabel" name="label_2">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+            <pointsize>15</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Syntax Tree</string>
           </property>
@@ -104,7 +201,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>952</width>
+     <width>721</width>
      <height>25</height>
     </rect>
    </property>

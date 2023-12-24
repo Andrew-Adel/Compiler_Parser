@@ -39,6 +39,8 @@ class MainWindow : public QMainWindow
 
 
 public:
+    QString inputText;
+    QList <QGraphicsItem*> itemList;
     std::queue<Token> scannerTokens;
     class Token {
     public:
@@ -51,6 +53,8 @@ public:
 
 
     void processAndDrawSyntaxtree();
+    void clearAll();
+    void openFile();
 
     ~MainWindow();
 
@@ -67,6 +71,12 @@ public slots:
 
 private slots:
     void on_scannerBtn_clicked();
+
+    // void on_pushButton_2_clicked();
+
+    // void on_clearBtn_clicked();
+
+    // void on_pushButton_3_clicked();
 
 private:
     QGraphicsView *view;
