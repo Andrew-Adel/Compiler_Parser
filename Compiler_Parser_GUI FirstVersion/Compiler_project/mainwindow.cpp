@@ -16,6 +16,9 @@
 #include <queue>
 #include "scanner.h"
 #include <vector>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+
 
 using namespace std;
 
@@ -389,6 +392,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    nodes.push_back(FarouqianNode(getType(dummy), getValue(dummy), dummy, initialX-50, initialY-50, 1, 1, 0));
+
     ui->label->setFont(heading1Font);
     ui->label_2->setFont(heading1Font);
     ui->label_3->setFont(heading1Font);
@@ -425,21 +430,57 @@ void MainWindow::clearAll(){
     ui->textEdit->clear();
     ui->scannerTxt->clear();
 
-    edges.clear();
-    nodes.clear();
-
     ui->textEdit->setFocus();
-    ui->graphicsView->clearMask();
 
-    if(scene->items().isEmpty()){
-        qDebug() << "Scene is empty";
-        QMessageBox::information(nullptr, "Done", "ALL tabs are cleared");
-        return;
+    if(!(nodes.size()==1 && nodes[0].title == "undefined")){
+        edges.clear();
+        nodes.clear();
+
+
+
+        ui->graphicsView->clearMask();
+
+        QGraphicsItem* item;
+
+        if(item->scene() == nullptr){
+            qDebug() << "Scene is empty";
+            QMessageBox::information(nullptr, "Done", "ALL tabs are cleared");
+            return;
+        }
+
+        scene->clear();
+
+        view->viewport()->update();
+
+        nodes.push_back(FarouqianNode(getType(dummy), getValue(dummy), dummy, initialX-50, initialY-50, 1, 1, 0));      // as a flag to enter this if condition
+
+
+        /*
+        //          didn't work too (segmentation error in scene->items())
+        QList <QGraphicsItem*> itemList2 = scene->items();
+
+        while(!itemList2.isEmpty()){
+            delete itemList2.first();
+            itemList2 = scene->items();
+        }
+
+        //    while( ! Items.empty() ) {
+        //       scene->removeItem( Items.first() );
+        //       delete Items.first();
+        //       Items.removeFirst();
+        //    }
+        view->viewport()->update();
+        */
+
+        /*
+        //          the scene isn't cleared by this method too
+
+        QGraphicsScene* scene2 = new QGraphicsScene();
+
+        // Switch Scene to the new Scene
+        scene = scene2;
+        */
     }
-
-    scene->clear();
-
-    view->viewport()->update();
 }
 
 void MainWindow::processAndDrawSyntaxtree() {
@@ -497,6 +538,8 @@ void MainWindow::processAndDrawSyntaxtree() {
 
              QGraphicsLineItem* line = new QGraphicsLineItem(QLineF(edge.x, edge.y, edge.px,edge.py));
              scene->addItem(line);
+             itemList.append(line);
+
             //                     هنحتاج نعمل حاجة زي كده لو عايزين نفرق بين لون الneighbours and children
              // if(edge.isFriend)
              //     parsetree->addEdgeFriend(edge.x1, edge.y1, edge.x2, edge.y2);
@@ -515,6 +558,7 @@ void MainWindow::processAndDrawSyntaxtree() {
                  txtItem->setPos(FNode.x_coordinate+20, FNode.y_coordinate+5);
                  scene->addItem(ell);
                  scene->addItem(txtItem);
+                 itemList.append(txtItem);
              }
              else if(FNode.title!="undefined"){                                                 // 0 -> rectangle
                  QGraphicsRectItem* rect = new QGraphicsRectItem(FNode.x_coordinate, FNode.y_coordinate, FNode.length, FNode.height);
@@ -527,10 +571,12 @@ void MainWindow::processAndDrawSyntaxtree() {
                  txtItem->setPos(FNode.x_coordinate+20, FNode.y_coordinate+5);
                  scene->addItem(rect);
                  scene->addItem(txtItem);
+                 itemList.append(txtItem);
              }
              else {
                  QGraphicsLineItem* line = new QGraphicsLineItem( QLineF(0,0,10,10) );
                  scene->addItem(line);
+                 itemList.append(line);
              }
              // for(auto node: nodes){
              //     if (node.Rect)
@@ -588,6 +634,10 @@ void MainWindow::processAndDrawSyntaxtree() {
     // }
 
     // Reset the flag for the "Parse" button click.
+
+    QMessageBox::information(0, "Succeeded", "Parsed Successfuly!");
+    nodes.push_back(FarouqianNode(getType(dummy), getValue(dummy), dummy, initialX-50, initialY-50, 1, 1, 0));
+
     parseButtonClicked = false;
 }
 
@@ -627,6 +677,14 @@ void MainWindow::on_scannerBtn_clicked()
 
         QMessageBox::information(0, "Succeeded", "Scanned Successfuly!");
 
+        // // to clear the syntax tree
+        // QGraphicsItem* item;
+
+        // if(item->scene() == nullptr){
+        //     scene->clear();
+        //     view->viewport()->update();
+        // }
+
     } catch (const exception& e) {
         // Handle the exception gracefully
         ScannerBtnClicked=false;
@@ -646,6 +704,7 @@ void MainWindow::openFile(){
 
     if(!file.open(QIODevice::ReadOnly)){
         QMessageBox::information(0, "info", file.errorString());
+        return;
     }
 
     ui->textEdit->clear();

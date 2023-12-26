@@ -12,18 +12,20 @@
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -32,13 +34,17 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QFormLayout *formLayout;
+    QVBoxLayout *verticalLayout;
+    QPushButton *clearBtn;
     QTabWidget *tabWidget;
-    QWidget *FileUpload;
-    QGridLayout *gridLayout_2;
+    QWidget *Editor;
+    QVBoxLayout *verticalLayout_2;
+    QHBoxLayout *horizontalLayout_4;
     QLabel *label;
+    QSpacerItem *horizontalSpacer;
+    QPushButton *uploadFile;
     QTextEdit *textEdit;
-    QPushButton *ScannerBtn;
+    QPushButton *scannerBtn;
     QWidget *ScannerOutput;
     QGridLayout *gridLayout_3;
     QLabel *label_3;
@@ -57,46 +63,83 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(952, 630);
+        MainWindow->resize(721, 541);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        formLayout = new QFormLayout(centralwidget);
-        formLayout->setObjectName("formLayout");
+        verticalLayout = new QVBoxLayout(centralwidget);
+        verticalLayout->setObjectName("verticalLayout");
+        clearBtn = new QPushButton(centralwidget);
+        clearBtn->setObjectName("clearBtn");
+        QFont font;
+        font.setPointSize(11);
+        font.setBold(true);
+        clearBtn->setFont(font);
+
+        verticalLayout->addWidget(clearBtn);
+
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName("tabWidget");
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        tabWidget->setEnabled(true);
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(tabWidget->sizePolicy().hasHeightForWidth());
         tabWidget->setSizePolicy(sizePolicy);
-        FileUpload = new QWidget();
-        FileUpload->setObjectName("FileUpload");
-        gridLayout_2 = new QGridLayout(FileUpload);
-        gridLayout_2->setObjectName("gridLayout_2");
-        label = new QLabel(FileUpload);
+        Editor = new QWidget();
+        Editor->setObjectName("Editor");
+        verticalLayout_2 = new QVBoxLayout(Editor);
+        verticalLayout_2->setObjectName("verticalLayout_2");
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName("horizontalLayout_4");
+        label = new QLabel(Editor);
         label->setObjectName("label");
+        QFont font1;
+        font1.setFamilies({QString::fromUtf8("Arial")});
+        font1.setPointSize(15);
+        font1.setBold(true);
+        label->setFont(font1);
 
-        gridLayout_2->addWidget(label, 0, 0, 1, 1);
+        horizontalLayout_4->addWidget(label);
 
-        textEdit = new QTextEdit(FileUpload);
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer);
+
+        uploadFile = new QPushButton(Editor);
+        uploadFile->setObjectName("uploadFile");
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(uploadFile->sizePolicy().hasHeightForWidth());
+        uploadFile->setSizePolicy(sizePolicy1);
+        uploadFile->setSizeIncrement(QSize(0, 0));
+        uploadFile->setFont(font);
+
+        horizontalLayout_4->addWidget(uploadFile);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_4);
+
+        textEdit = new QTextEdit(Editor);
         textEdit->setObjectName("textEdit");
 
-        gridLayout_2->addWidget(textEdit, 1, 0, 1, 1);
+        verticalLayout_2->addWidget(textEdit);
 
-        ScannerBtn = new QPushButton(FileUpload);
-        ScannerBtn->setObjectName("ScannerBtn");
-        ScannerBtn->setAutoFillBackground(false);
-        ScannerBtn->setStyleSheet(QString::fromUtf8(""));
+        scannerBtn = new QPushButton(Editor);
+        scannerBtn->setObjectName("scannerBtn");
+        scannerBtn->setSizeIncrement(QSize(10, 100));
+        scannerBtn->setFont(font);
 
-        gridLayout_2->addWidget(ScannerBtn, 2, 0, 1, 1);
+        verticalLayout_2->addWidget(scannerBtn);
 
-        tabWidget->addTab(FileUpload, QString());
+        tabWidget->addTab(Editor, QString());
         ScannerOutput = new QWidget();
         ScannerOutput->setObjectName("ScannerOutput");
         gridLayout_3 = new QGridLayout(ScannerOutput);
         gridLayout_3->setObjectName("gridLayout_3");
         label_3 = new QLabel(ScannerOutput);
         label_3->setObjectName("label_3");
+        label_3->setFont(font1);
 
         gridLayout_3->addWidget(label_3, 0, 0, 1, 1);
 
@@ -108,6 +151,7 @@ public:
 
         pushButton = new QPushButton(ScannerOutput);
         pushButton->setObjectName("pushButton");
+        pushButton->setFont(font);
 
         gridLayout_3->addWidget(pushButton, 2, 0, 1, 1);
 
@@ -118,6 +162,7 @@ public:
         gridLayout->setObjectName("gridLayout");
         label_2 = new QLabel(SyntaxTree);
         label_2->setObjectName("label_2");
+        label_2->setFont(font1);
 
         gridLayout->addWidget(label_2, 0, 0, 1, 1);
 
@@ -128,12 +173,12 @@ public:
 
         tabWidget->addTab(SyntaxTree, QString());
 
-        formLayout->setWidget(0, QFormLayout::SpanningRole, tabWidget);
+        verticalLayout->addWidget(tabWidget);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 952, 25));
+        menubar->setGeometry(QRect(0, 0, 721, 25));
         menuCompiler = new QMenu(menubar);
         menuCompiler->setObjectName("menuCompiler");
         MainWindow->setMenuBar(menubar);
@@ -148,7 +193,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -157,11 +202,13 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        label->setText(QCoreApplication::translate("MainWindow", "Enter your code", nullptr));
-        ScannerBtn->setText(QCoreApplication::translate("MainWindow", "scan", nullptr));
-        tabWidget->setTabText(tabWidget->indexOf(FileUpload), QCoreApplication::translate("MainWindow", "Editor", nullptr));
+        clearBtn->setText(QCoreApplication::translate("MainWindow", "Clear", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "Enter you code", nullptr));
+        uploadFile->setText(QCoreApplication::translate("MainWindow", "Upload File", nullptr));
+        scannerBtn->setText(QCoreApplication::translate("MainWindow", "Scan", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(Editor), QCoreApplication::translate("MainWindow", "Editor", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Scanner Output", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "parse", nullptr));
+        pushButton->setText(QCoreApplication::translate("MainWindow", "Parse", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(ScannerOutput), QCoreApplication::translate("MainWindow", "Scanner Output", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Syntax Tree", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(SyntaxTree), QCoreApplication::translate("MainWindow", "Syntax Tree", nullptr));
