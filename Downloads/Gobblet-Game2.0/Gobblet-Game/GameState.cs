@@ -111,6 +111,8 @@ namespace Gobblet_Game
                 maxHeuristic+= getBestMove(this, depth - 1); //calculate the heuristic score after making this move
                 player1.IsMyTurn = !player1.IsMyTurn;
                 player2.IsMyTurn = !player2.IsMyTurn;
+                // should it work?
+
                 currentBoard.Celles[x, y].Pieces.Pop();
                 if (moves[i].from is not null)
                 {
